@@ -16,14 +16,16 @@ limitations under the License. -->
     <style>
       @host { :scope {display: block;} }
     </style>
+
     <div>
       <div>
-        <img src="{{icon}}">
-        <div>{{name}}</div> <small>{{version}}</small>
+        <img src="{{icon}}" style="float: left">
+        <div>{{name}}</div> 
+        <small>{{version}}</small>
+        <a href="{{docLink}}" target="_blank">Docs</a>
+        <div>preferred?: {{isPreferred}}</div>
       </div>
       <div>{{description}}</div>
-      <div>preferred?: {{isPreferred}}</div>
-      <a href="{{docLink}}" target="_blank">Docs</a>
     </div>
   </template>
   <script>

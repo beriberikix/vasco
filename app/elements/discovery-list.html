@@ -19,41 +19,61 @@ limitations under the License. -->
       @host { :scope {display: block;} }
     </style>
 
-    <label>Preferred? <input type="checkbox" checked="{{showOnlyPreferred}}"></label>
-    <template repeat="{{item in filtered}}">
+    <div>
+      <input type="text" value="{{searchTerm}}">
+      <label>Preferred? <input type="checkbox" checked="{{preferredOnly}}"></label>
+    </div>
+
+    <template repeat="{{item in displayAPIs}}">
       <discovery-overview name="{{item.title}}" 
         description="{{item.description}}" 
         icon="{{item.icons.x32}}" 
         version="{{item.version}}" 
-        isPreferred="{{item.preferred" 
+        isPreferred="{{item.preferred}}" 
         docLink="{{item.documentationLink}}">
       </discovery-overview>
     </template>
     
-    <polymer-jsonp id="jsonp" url="https://www.googleapis.com/discovery/v1/apis/?callback=" response="{{data}}"></polymer-jsonp>
+    <polymer-jsonp auto url="https://www.googleapis.com/discovery/v1/apis/?callback=" response="{{directoryList}}"></polymer-jsonp>
   </template>
   <script>
     Polymer('discovery-list', {
       //applyAuthorStyles: true,
       //resetStyleInheritance: true,
-      created: function() { 
-        this.filtered = [];
-        this.$.jsonp.go();
-      },
-      showOnlyPreferred: true,
-      dataChanged: function() {
-        if (this.data) {
-          this.showOnlyPreferredChanged();
+      allAPIs: [],
+      preferredAPIs: [],
+      displayAPIs: [],
+      preferredOnly: true,
+      directoryListChanged: function() {
+        if (this.directoryList) {
+          this.allAPIs = this.directoryList.items;
+          // this.filterPreferred();
+          this.preferredAPIs = this.allAPIs.filter(function(api) {
+            return api.preferred
+          });
+          this.preferredOnlyChanged();
         }
       },
-      showOnlyPreferredChanged: function() {
-        if(this.showOnlyPreferred) {
-          this.filtered = this.data.items.filter(function(elem) {
-            return elem.preferred;
-          });
+      preferredOnlyChanged: function() {
+        if(this.preferredOnly) {
+          this.displayAPIs = this.preferredAPIs;
         } else {
-          //this.dataChanged();
-            this.filtered = this.data.items;            
+          this.displayAPIs = this.allAPIs;
+        }
+      },
+      searchTermChanged: function(old) {
+        var term = this.searchTerm;
+        var searchList = [];
+        if(this.preferredOnly) {
+          this.searchList = this.preferredAPIs;
+        } else {
+          this.searchList = this.allAPIs;
+        }
+        if(term) {
+          this.displayAPIs = this.searchList.filter(function(item) {
+            var re = new RegExp(term, 'i');
+            return item.title.search(re) > -1 || item.description.search(re) > -1;
+          });
         }
       }
     });
