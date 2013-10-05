@@ -1,0 +1,48 @@
+<link rel="import" href="polymer-jsonp.html">
+<link rel="import" href="discovery-overview.html">
+<polymer-element name="discovery-list"  attributes="">
+  <template>
+    <style>
+      @host { :scope {display: block;} }
+    </style>
+
+    <label>Preferred? <input type="checkbox" checked="{{showOnlyPreferred}}"></label>
+    <template repeat="{{item in filtered}}">
+      <discovery-overview name="{{item.title}}" 
+        description="{{item.description}}" 
+        icon="{{item.icons.x32}}" 
+        version="{{item.version}}" 
+        isPreferred="{{item.preferred" 
+        docLink="{{item.documentationLink}}">
+      </discovery-overview>
+    </template>
+    
+    <polymer-jsonp id="jsonp" url="https://www.googleapis.com/discovery/v1/apis/?callback=" response="{{data}}"></polymer-jsonp>
+  </template>
+  <script>
+    Polymer('discovery-list', {
+      //applyAuthorStyles: true,
+      //resetStyleInheritance: true,
+      created: function() { 
+        this.filtered = [];
+        this.$.jsonp.go();
+      },
+      showOnlyPreferred: true,
+      dataChanged: function() {
+        if (this.data) {
+          this.showOnlyPreferredChanged();
+        }
+      },
+      showOnlyPreferredChanged: function() {
+        if(this.showOnlyPreferred) {
+          this.filtered = this.data.items.filter(function(elem) {
+            return elem.preferred;
+          });
+        } else {
+          //this.dataChanged();
+            this.filtered = this.data.items;            
+        }
+      }
+    });
+  </script>
+</polymer-element>

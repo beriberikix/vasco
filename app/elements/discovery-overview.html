@@ -1,0 +1,32 @@
+<polymer-element name="discovery-overview"  attributes="name description version icon isPreferred docLink">
+  <template>
+    <style>
+      @host { :scope {display: block;} }
+    </style>
+    <div>
+      <div>
+        <img src="{{icon}}">
+        <div>{{name}}</div> <small>{{version}}</small>
+      </div>
+      <div>{{description}}</div>
+      <div>preferred?: {{isPreferred}}</div>
+      <a href="{{docLink}}" target="_blank">Docs</a>
+    </div>
+  </template>
+  <script>
+    Polymer('discovery-overview', {
+      //applyAuthorStyles: true,
+      //resetStyleInheritance: true,
+      created: function() { },
+      enteredView: function() { },
+      leftView: function() { },
+      attributeChanged: function(attrName, oldVal, newVal) { },
+      title: 'api',
+      description: 'an api',
+      version: 'v1',
+      icon: 'something',
+      isPreferred: true,
+      docLink: 'something else'
+    });
+  </script>
+</polymer-element>

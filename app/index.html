@@ -17,30 +17,21 @@
 
         <!-- Place your HTML imports here -->
         <link rel="import" href="elements/polymer-jsonp.html">
+        <link rel="import" href="elements/discovery-list.html">
+        <link rel="import" href="elements/discovery-overview.html">
     </head>
     <body>
-      <template repeat="{{data.items}}">
-        <div style="border: solid black 1px">
-          <div>Title: {{title}}</div>
-          <div>Version: {{version}}</div>
-          <div>Description: {{description}}</div>
-          <div>
-        </div>
-      </template>
+
+      <discovery-list></discovery-list>
 
       <script>
         document.addEventListener('WebComponentsReady', function() {
-          var jsonp = document.querySelector("polymer-jsonp");
-          jsonp.addEventListener("polymer-response", 
-            function(e) {
-              document.querySelector('template').model = { data:e.detail.response };
-          });
+
         });
       </script>
 
         <!-- build:js scripts/vendor.js -->
         <script src="bower_components/polymer/polymer.min.js"></script>
         <!-- endbuild -->
-      <polymer-jsonp auto url="https://www.googleapis.com/discovery/v1/apis/?callback="></polymer-jsonp>
 </body>
 </html>
